@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   migrations:
     build:
@@ -51,7 +49,7 @@ services:
     depends_on:
       - migrations
   db:
-    image: postgres:17.2-alpine
+    image: postgres:17.5-alpine
     volumes:
       - ../postgres_data:/var/lib/postgresql/data/
     restart: always
