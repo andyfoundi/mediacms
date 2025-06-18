@@ -1664,13 +1664,12 @@ def media_file_delete(sender, instance, **kwargs):
 
 
 @receiver(m2m_changed, sender=Media.category.through)
-def media_m2m(sender, instance, **kwargs):
-    if instance.category.all():
+def media_category_change(sender, instance, **kwargs):
+    if isinstance(instance, Media):
         for category in instance.category.all():
             category.update_category_media()
-    if instance.tags.all():
-        for tag in instance.tags.all():
-            tag.update_tag_media()
+    else:  # Category
+        instance.update_category_media()
 
 
 @receiver(post_save, sender=Encoding)

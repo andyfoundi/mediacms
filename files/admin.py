@@ -57,7 +57,16 @@ class MediaAdmin(admin.ModelAdmin):
 
 
 class CategoryAdminForm(forms.ModelForm):
-    rbac_groups = forms.ModelMultipleChoiceField(queryset=RBACGroup.objects.all(), required=False, widget=admin.widgets.FilteredSelectMultiple('Groups', False))
+    rbac_groups = forms.ModelMultipleChoiceField(
+        queryset=RBACGroup.objects.all(),
+        required=False,
+        widget=admin.widgets.FilteredSelectMultiple('Groups', False))
+
+    media_files = forms.ModelMultipleChoiceField(
+        queryset=Media.objects.all(),
+        required=False,
+        widget=admin.widgets.FilteredSelectMultiple('Media Files', False),
+        help_text="Select media files to add to this category.")
 
     class Meta:
         model = Category
@@ -89,6 +98,7 @@ class CategoryAdminForm(forms.ModelForm):
 
         if self.instance.pk:
             self.fields['rbac_groups'].initial = self.instance.rbac_groups.all()
+            self.fields['media_files'].initial = self.instance.media_set.all()
 
     def save(self, commit=True):
         category = super().save(commit=True)
@@ -107,6 +117,9 @@ class CategoryAdminForm(forms.ModelForm):
         if self.instance.pk:
             rbac_groups = self.cleaned_data['rbac_groups']
             self._update_rbac_groups(rbac_groups)
+
+            media_files = self.cleaned_data.get('media_files', [])
+            self.instance.media_set.set(media_files)
 
     def _update_rbac_groups(self, rbac_groups):
         new_rbac_group_ids = RBACGroup.objects.filter(pk__in=rbac_groups).values_list('pk', flat=True)
@@ -158,7 +171,15 @@ class CategoryAdmin(admin.ModelAdmin):
             (
                 'Category Information',
                 {
-                    'fields': ['uid', 'title', 'description', 'user', 'media_count', 'thumbnail', 'listings_thumbnail'],
+                    'fields': [
+                        'uid',
+                        'title',
+                        'description',
+                        'user',
+                        'media_files',
+                        'media_count',
+                        'thumbnail',
+                        'listings_thumbnail'],
                 },
             ),
         ]
