@@ -1,0 +1,17 @@
+How to start the service:
+
+1. copy the settings
+  1.1. local_settings:
+    - obtain the settings from the secret manager
+    - copy it to mediacms/deploy/docker/local_settings.py
+  1.2. .env:
+    - obtain the .env from the secret manager
+    - place it under mediacms/
+
+2. (first time) setup SAML configs
+  2.1 Add identity provider settings (example in secret manager)
+  2.2 run `bash fix_socialapp_settings.sh` to actually place the config into socialapp.settings
+    - fail running this script will face the missing 'idp' error when accessing https://tube.corp.foundi.info/accounts/saml/foundi-info/metadata
+
+3. start the service
+  2.1 `bash start.sh`
