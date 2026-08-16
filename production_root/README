@@ -1,6 +1,6 @@
-Files in this home directory (README, start.sh, restart_web.sh,
-sync_to_latest.sh, secrets/) live only on this machine — they are
-NOT checked into the mediacms repo.
+Home-directory files for the production machine. README and
+sync_to_latest.sh are versioned in the repo under production_root/;
+copy them to ~ after updating. secrets/ lives only on this machine.
 
 How to start the service:
 
